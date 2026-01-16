@@ -68,6 +68,16 @@ instance/
 # Scrapy stuff:
 .scrapy
 
+# PyTorch
+*.pth 
+
+# Cache 
+__pycache__/
+*.pyc
+
+# Dataset
+data/
+
 # Sphinx documentation
 docs/_build/
 

@@ -74,6 +74,8 @@ instance/
 # Cache 
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
 # Dataset
 data/

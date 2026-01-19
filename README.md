@@ -6,6 +6,8 @@
 
 # dovrei usare meno classi o uso tutte le 120?
 
+# metto anche il tempo di inferenza?
+
 ## Setup
 
 ```bash

@@ -22,9 +22,9 @@ def get_dataloaders(data_dir, batch_size):
         transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD),
     ])
 
-    train_set = datasets.ImageFolder(f"{data_dir}/train", train_transform)
-    val_set = datasets.ImageFolder(f"{data_dir}/val", test_transform)
-    test_set = datasets.ImageFolder(f"{data_dir}/test", test_transform)
+    train_set = datasets.ImageFolder("datasets/train", train_transform)
+    val_set = datasets.ImageFolder("datasets/val", test_transform)
+    test_set = datasets.ImageFolder("datasets/test", test_transform)
 
     #da verificare se posso utilizzare 4 workers
     train_loader = DataLoader(train_set, batch_size, shuffle=True, num_workers=4)

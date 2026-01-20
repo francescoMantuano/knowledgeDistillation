@@ -6,6 +6,7 @@ if __name__ == "__main__":
     from utils.dataset import get_dataloaders
     from utils.train_utils import train_one_epoch, evaluate
     from config import *
+    import time
 
     train_loader, val_loader, _ = get_dataloaders("data", BATCH_SIZE)
 
@@ -14,6 +15,8 @@ if __name__ == "__main__":
     optimizer = AdamW(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
 
     best_loss = float("inf")
+
+    start_time = time.time()
 
     for epoch in range(NUM_EPOCHS):
         
@@ -30,3 +33,10 @@ if __name__ == "__main__":
             patience_counter += 1
             if patience_counter >= PATIENCE:
                 break
+    end_time = time.time()
+
+    total_time = end_time - start_time
+    avg_epoch_time = total_time / NUM_EPOCHS
+
+    print(f"\nTotal training time: {total_time/60:.2f} minutes")
+    print(f"Avg time per epoch: {avg_epoch_time:.2f} seconds")

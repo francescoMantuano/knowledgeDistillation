@@ -1,12 +1,16 @@
 # knowledgeDistillation 
  
-# conviene utilizzare batch size diversi per teacher/student?
+# conviene utilizzare batch size diversi per teacher/student? NO
 
-# dovrei fare freezing di qualche layer del teacher?
+# dovrei fare freezing di qualche layer del teacher? MAYBE
 
-# dovrei usare meno classi o uso tutte le 120?
+# dovrei usare meno classi o uso tutte le 120? TUTTE
 
-# metto anche il tempo di inferenza?
+# eventualmente utilizzo WeightedRandomSampler per il class imbalance?
+
+# metto anche il tempo di inferenza? SI
+
+# avendo a disposizione una GPU converrebbe utilizzare mixed precision o non dovrei usarla per maggiore generalità?
 
 ## Setup
 

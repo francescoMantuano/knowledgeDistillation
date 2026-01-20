@@ -7,6 +7,7 @@ if __name__ == "__main__":
     from utils.losses import distillation_loss
     from utils.metrics import accuracy
     from config import *
+    import time
 
     train_loader, val_loader, _ = get_dataloaders("data", BATCH_SIZE)
 
@@ -16,6 +17,8 @@ if __name__ == "__main__":
 
     student = get_student(NUM_CLASSES).to(DEVICE)
     optimizer = AdamW(student.parameters(), lr=LR)
+
+    start_time = time.time()
 
     for epoch in range(NUM_EPOCHS):
         student.train()
@@ -38,6 +41,13 @@ if __name__ == "__main__":
             total_acc += accuracy(student_logits, y)
 
         print(f"[Student KD] Epoch {epoch}: Acc {total_acc / len(train_loader):.3f}")
-        
+
+    end_time = time.time()
+
+    total_time = end_time - start_time
+    avg_epoch_time = total_time / NUM_EPOCHS
+
+    print(f"\nTotal training time: {total_time/60:.2f} minutes")
+    print(f"Avg time per epoch: {avg_epoch_time:.2f} seconds")
     torch.save(student.state_dict(), "checkpoints/student_kd.pth") #file binario che contiere i parametri del modello studente allenato con kd
 

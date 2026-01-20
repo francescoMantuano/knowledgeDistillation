@@ -15,6 +15,7 @@ if __name__ == "__main__":
     optimizer = AdamW(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
 
     best_loss = float("inf")
+    patience_counter = 0
 
     start_time = time.time()
 
@@ -28,11 +29,19 @@ if __name__ == "__main__":
 
         if val_loss < best_loss:
             best_loss = val_loss
+            patience_counter = 0
             torch.save(model.state_dict(), "checkpoints/student.pth") #file binario che contiere i parametri del modello studente
         else:
             patience_counter += 1
-            if patience_counter >= PATIENCE:
-                break
+    
+        if patience_counter >= PATIENCE:
+            print(f"Early stopping at epoch {epoch+1}")
+            break
+
+    #per evitare sottostima del tempo in ambiente cuda        
+    if DEVICE == "cuda":
+        torch.cuda.synchronize()
+
     end_time = time.time()
 
     total_time = end_time - start_time

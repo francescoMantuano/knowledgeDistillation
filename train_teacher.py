@@ -33,9 +33,17 @@ if __name__ == "__main__":
             patience_counter = 0
         else:
             patience_counter += 1
-            if patience_counter >= PATIENCE:
-                break
+        
+        if patience_counter >= PATIENCE:
+            print(f"Early stopping at epoch {epoch+1}")
+            break
+
+    #per evitare sottostima del tempo in ambiente cuda        
+    if DEVICE == "cuda":
+        torch.cuda.synchronize()
+
     end_time = time.time()
+
 
     total_time = end_time - start_time
     avg_epoch_time = total_time / NUM_EPOCHS

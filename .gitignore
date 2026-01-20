@@ -80,11 +80,11 @@ __pycache__/
 # Dataset
 data/
 
-#annotations e immagini
+
 annotations/
 images/
 
-#stati dei modelli
+
 checkpoints/
 
 # Sphinx documentation

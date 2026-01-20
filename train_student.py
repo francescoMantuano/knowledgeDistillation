@@ -26,3 +26,7 @@ if __name__ == "__main__":
         if val_loss < best_loss:
             best_loss = val_loss
             torch.save(model.state_dict(), "checkpoints/student.pth") #file binario che contiere i parametri del modello studente
+        else:
+            patience_counter += 1
+            if patience_counter >= PATIENCE:
+                break

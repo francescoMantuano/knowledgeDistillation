@@ -2,9 +2,10 @@ import torch
 from config import DEVICE, NUM_CLASSES
 from utils.dataset import get_dataloaders
 from models.teacher import get_teacher  # la tua funzione che restituisce il modello
+from utils.metrics import measure_inference_time
 
 CHECKPOINT = "checkpoints/teacher.pth"
-BATCH_SIZE = 8
+BATCH_SIZE = 64
 
 def main():
     device = DEVICE
@@ -29,7 +30,10 @@ def main():
             correct += (preds == labels).sum().item()
             total += labels.size(0)
 
+    avg_time = measure_inference_time(model, test_loader, device)
+
     print(f"🎯 Teacher Test Accuracy (Top-1): {100 * correct / total:.2f}%")
+    print(f"Teacher inference time: {avg_time * 1000:.2f} ms/img")
 
 if __name__ == "__main__":
     main()

@@ -80,13 +80,6 @@ __pycache__/
 # Dataset
 data/
 
-
-annotations/
-images/
-
-
-checkpoints/
-
 # Sphinx documentation
 docs/_build/
 

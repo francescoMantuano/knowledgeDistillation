@@ -59,7 +59,7 @@ if __name__ == "__main__":
             best_val_acc = val_acc_epoch
             patience_counter = 0
             # salva il modello migliore
-            torch.save(student.state_dict(), "checkpoints/student_kd_best.pth") #file binario che contiere i parametri del modello studente allenato con kd
+            torch.save(student.state_dict(), "checkpoints/student_kd.pth") #file binario che contiere i parametri del modello studente allenato con kd
         else:
             patience_counter += 1
 

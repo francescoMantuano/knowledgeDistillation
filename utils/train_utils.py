@@ -12,7 +12,7 @@ def train_one_epoch(model, loader, optimizer, criterion, device):
         out = model(x)
         loss = criterion(out, y)
         loss.backward()
-        optimizer.step
+        optimizer.step()
 
         total_loss += loss.item()
         total_acc += accuracy(out, y)

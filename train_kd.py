@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
             total_acc += accuracy(student_logits, y)
 
-        print(f"[Student KD] Epoch {epoch}: Acc {total_acc / len(train_loader):.3f}")
+        print(f"[Student KD] Epoch {epoch}: Acc {total_acc / len(train_loader):.3f} | Loss {loss:.3f}")
 
         #early stopping per kd
         student.eval()

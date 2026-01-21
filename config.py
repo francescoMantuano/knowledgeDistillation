@@ -4,7 +4,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 NUM_CLASSES = 120
 BATCH_SIZE = 64
 #conviene fare un batch size sperato per teacher/student?
-NUM_EPOCHS = 5
+NUM_EPOCHS = 30
 LR = 1e-4
 WEIGHT_DECAY = 1e-4 #dropout per regolarizzare
 
@@ -15,3 +15,4 @@ KD_ALPHA = 0.7 #eventualmente modificabile
 
 PATIENCE = 5 #early stopping per regolarizzare
 
+    

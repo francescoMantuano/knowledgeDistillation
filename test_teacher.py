@@ -32,7 +32,7 @@ def main():
 
     avg_time = measure_inference_time(model, test_loader, device)
 
-    print(f"🎯 Teacher Test Accuracy (Top-1): {100 * correct / total:.2f}%")
+    print(f"Teacher Test Accuracy (Top-1): {100 * correct / total:.2f}%")
     print(f"Teacher inference time: {avg_time * 1000:.2f} ms/img")
 
 if __name__ == "__main__":

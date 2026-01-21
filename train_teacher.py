@@ -8,7 +8,7 @@ if __name__ == "__main__":
     from config import *
     import time
 
-    train_loader, val_loader, _ = get_dataloaders("/home/francesco/knowledgeDistillation/datasets", BATCH_SIZE)
+    train_loader, val_loader, _ = get_dataloaders("datasets", BATCH_SIZE)
 
     model = get_teacher(NUM_CLASSES).to(DEVICE)
     criterion = nn.CrossEntropyLoss()

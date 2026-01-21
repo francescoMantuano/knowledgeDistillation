@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     best_val_acc = 0.0
     patience_counter = 0
-    train_loader, val_loader, _ = get_dataloaders("data", BATCH_SIZE)
+    train_loader, val_loader, _ = get_dataloaders("datasets", BATCH_SIZE)
 
     teacher = get_teacher(NUM_CLASSES).to(DEVICE)
     teacher.load_state_dict(torch.load("checkpoints/teacher.pth"))

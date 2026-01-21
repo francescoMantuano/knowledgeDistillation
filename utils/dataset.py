@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 IMAGENET_MEAN = [0.485, 0.456, 0.406] # per normalizzare
 IMAGENET_STD = [0.229, 0.224, 0.225] # per normalizzare
 
-def get_dataloaders(data_dir, batch_size):
+def get_dataloaders(datasets, batch_size):
 
     train_transform = transforms.Compose([
         transforms.RandomResizedCrop(224),

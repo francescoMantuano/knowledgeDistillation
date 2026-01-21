@@ -8,7 +8,7 @@ if __name__ == "__main__":
     from config import *
     import time
 
-    train_loader, val_loader, _ = get_dataloaders("data", BATCH_SIZE)
+    train_loader, val_loader, _ = get_dataloaders("datasets", BATCH_SIZE)
 
     model = get_student(NUM_CLASSES).to(DEVICE)
     criterion = nn.CrossEntropyLoss()
@@ -25,7 +25,7 @@ if __name__ == "__main__":
         val_loss, val_acc = evaluate(model, val_loader, criterion, DEVICE)
 
         print(f"[Student] Epoch {epoch}: "
-            f"Train Acc {train_acc:.3f} | Val Acc {val_acc:.3f}")
+            f"Train Acc {train_acc:.3f} | Val Acc {val_acc:.3f} | Train Loss {train_loss:.3f}")
 
         if val_loss < best_loss:
             best_loss = val_loss

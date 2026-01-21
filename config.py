@@ -5,7 +5,7 @@ NUM_CLASSES = 120
 BATCH_SIZE = 64
 #conviene fare un batch size sperato per teacher/student?
 NUM_EPOCHS = 30
-LR = 1e-4
+LR = 3e-4
 WEIGHT_DECAY = 1e-4 #dropout per regolarizzare
 
 IMAGE_SIZE = 224

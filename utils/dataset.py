@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 IMAGENET_MEAN = [0.485, 0.456, 0.406] # per normalizzare
 IMAGENET_STD = [0.229, 0.224, 0.225] # per normalizzare
 
-def get_dataloaders(datasets, batch_size):
+def get_dataloaders(data_root, batch_size):
 
     train_transform = transforms.Compose([
         transforms.RandomResizedCrop(224),
@@ -22,9 +22,9 @@ def get_dataloaders(datasets, batch_size):
         transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD),
     ])
 
-    train_set = datasets.ImageFolder("datasets/train", train_transform)
-    val_set = datasets.ImageFolder("datasets/val", test_transform)
-    test_set = datasets.ImageFolder("datasets/test", test_transform)
+    train_set = datasets.ImageFolder(f"{data_root}/train", train_transform)
+    val_set = datasets.ImageFolder(f"{data_root}/val", test_transform)
+    test_set = datasets.ImageFolder(f"{data_root}/test", test_transform)
 
     #da verificare se posso utilizzare 4 workers
     train_loader = DataLoader(train_set, batch_size, shuffle=True, num_workers=4)

@@ -25,7 +25,7 @@ if __name__ == "__main__":
         val_loss, val_acc = evaluate(model, val_loader, criterion, DEVICE)
 
         print(f"[Student] Epoch {epoch}: "
-            f"Train Acc {train_acc:.3f} | Val Acc {val_acc:.3f} | Train Loss {train_loss:.3f}")
+            f"Train Acc {train_acc:.3f} | Val Acc {val_acc:.3f} | Train Loss {train_loss:.3f}  | Val Loss {val_loss:.3f}")
 
         if val_loss < best_loss:
             best_loss = val_loss

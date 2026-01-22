@@ -9,7 +9,7 @@ if __name__ == "__main__":
     from config import *
     import time
 
-    best_val_acc = 0.0
+    best_val_loss = float("inf")
     patience_counter = 0
     train_loader, val_loader, _ = get_dataloaders("datasets", BATCH_SIZE)
 
@@ -18,13 +18,14 @@ if __name__ == "__main__":
     teacher.eval()
 
     student = get_student(NUM_CLASSES).to(DEVICE)
-    optimizer = AdamW(student.parameters(), lr=LR)
+    optimizer = AdamW(student.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
 
     start_time = time.time()
 
     for epoch in range(NUM_EPOCHS):
         student.train()
-        total_acc = 0
+        epoch_loss = 0.0
+        epoch_acc = 0.0
 
         # loop di training
         for x, y in train_loader:
@@ -41,22 +42,36 @@ if __name__ == "__main__":
             loss.backward()
             optimizer.step()
 
-            total_acc += accuracy(student_logits, y)
+            epoch_loss += loss.item()
+            epoch_acc += accuracy(student_logits, y)
 
-        print(f"[Student KD] Epoch {epoch}: Acc {total_acc / len(train_loader):.3f} | Loss {loss:.3f}")
+        epoch_loss /= len(train_loader)
+        epoch_acc /= len(train_loader)
 
         #early stopping per kd
         student.eval()
-        val_total_acc = 0
+        val_loss = 0.0
+        val_acc = 0.0
+
         with torch.no_grad():
             for x_val, y_val in val_loader:
                 x_val, y_val = x_val.to(DEVICE), y_val.to(DEVICE)
-                val_logits = student(x_val)
-                val_total_acc += accuracy(val_logits, y_val)
-        val_acc_epoch = val_total_acc / len(val_loader)
 
-        if val_acc_epoch > best_val_acc:
-            best_val_acc = val_acc_epoch
+                student_logits = student(x_val)
+                teacher_logits = teacher(x_val)
+
+                loss = distillation_loss(student_logits, teacher_logits, y_val, KD_TEMPERATURE, KD_ALPHA)
+
+                val_loss += loss.item()
+                val_acc += accuracy(student_logits, y_val)
+            
+        val_loss /= len(val_loader)
+        val_acc /= len(val_loader)
+
+        print(f"[Student KD] Epoch {epoch}: Train Acc {epoch_acc:.3f} | Val Acc {val_acc:.3f} | Train Loss {epoch_loss:.3f} | Val Loss {val_loss:.3f}")
+
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
             patience_counter = 0
             # salva il modello migliore
             torch.save(student.state_dict(), "checkpoints/student_kd.pth") #file binario che contiere i parametri del modello studente allenato con kd

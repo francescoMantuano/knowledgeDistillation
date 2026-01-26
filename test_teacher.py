@@ -1,11 +1,10 @@
 import torch
-from config import DEVICE, NUM_CLASSES
+from config import DEVICE, NUM_CLASSES, BATCH_SIZE
 from utils.dataset import get_dataloaders
 from models.teacher import get_teacher  # la tua funzione che restituisce il modello
 from utils.metrics import measure_inference_time
 
 CHECKPOINT = "checkpoints/teacher.pth"
-BATCH_SIZE = 64
 
 def main():
     device = DEVICE

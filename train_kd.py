@@ -11,6 +11,8 @@ if __name__ == "__main__":
 
     best_val_loss = float("inf")
     patience_counter = 0
+    actual_epochs = 0
+
     train_loader, val_loader, _ = get_dataloaders("datasets", BATCH_SIZE)
 
     teacher = get_teacher(NUM_CLASSES).to(DEVICE)
@@ -23,6 +25,7 @@ if __name__ == "__main__":
     start_time = time.time()
 
     for epoch in range(NUM_EPOCHS):
+        actual_epochs += 1
         student.train()
         epoch_loss = 0.0
         epoch_acc = 0.0
@@ -91,7 +94,7 @@ if __name__ == "__main__":
     end_time = time.time()
 
     total_time = end_time - start_time
-    avg_epoch_time = total_time / NUM_EPOCHS
+    avg_epoch_time = total_time / actual_epochs
 
     print(f"\nTotal training time: {total_time/60:.2f} minutes")
     print(f"Avg time per epoch: {avg_epoch_time:.2f} seconds")

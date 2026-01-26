@@ -16,11 +16,12 @@ if __name__ == "__main__":
 
     best_loss = float("inf")
     patience_counter = 0
+    actual_epochs = 0
 
     start_time = time.time()
 
     for epoch in range(NUM_EPOCHS):
-
+        actual_epochs += 1
         train_loss, train_acc = train_one_epoch(model, train_loader, optimizer, criterion, DEVICE)
         val_loss, val_acc = evaluate(model, val_loader, criterion, DEVICE)
 
@@ -46,7 +47,7 @@ if __name__ == "__main__":
 
 
     total_time = end_time - start_time
-    avg_epoch_time = total_time / NUM_EPOCHS
+    avg_epoch_time = total_time / actual_epochs
 
     print(f"\nTotal training time: {total_time/60:.2f} minutes")
     print(f"Avg time per epoch: {avg_epoch_time:.2f} seconds")

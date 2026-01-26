@@ -12,7 +12,7 @@ WEIGHT_DECAY = 1e-4 #dropout per regolarizzare
 
 IMAGE_SIZE = 224
 
-KD_TEMPERATURE = 4.0 #eventualmente modificabile
+KD_TEMPERATURE = 1 #eventualmente modificabile
 KD_ALPHA = 0.7 #eventualmente modificabile
 
 PATIENCE = 15 #early stopping per regolarizzare

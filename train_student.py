@@ -4,9 +4,10 @@ if __name__ == "__main__":
     from torch.optim import AdamW
     from models.student import get_student
     from utils.dataset import get_dataloaders
-    from utils.train_utils import train_one_epoch, evaluate
+    from utils.train_utils import train_one_epoch, evaluate, count_params
     from config import *
     import time
+    import os
 
     train_loader, val_loader, _ = get_dataloaders("datasets", BATCH_SIZE)
 
@@ -48,5 +49,10 @@ if __name__ == "__main__":
     total_time = end_time - start_time
     avg_epoch_time = total_time / actual_epochs
 
+    size_student = os.path.getsize("checkpoints/student.pth") / (1024**2)
+
+
     print(f"\nTotal training time: {total_time/60:.2f} minutes")
     print(f"Avg time per epoch: {avg_epoch_time:.2f} seconds")
+    print(f"Student size: {size_student:2f} MB")
+    print("Student params:", count_params(model))

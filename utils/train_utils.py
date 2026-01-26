@@ -36,4 +36,5 @@ def evaluate(model, loader, criterion, device):
     return total_loss / len(loader), total_acc / len(loader)
 
 
-
+def count_params(model):
+    return sum(p.numel() for p in model.parameters())

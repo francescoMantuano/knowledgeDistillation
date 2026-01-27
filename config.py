@@ -17,4 +17,5 @@ KD_ALPHA = 0.7 #eventualmente modificabile
 
 PATIENCE = 15 #early stopping per regolarizzare
 
+DROPOUT_RATE = 0.3
     

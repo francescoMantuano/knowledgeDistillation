@@ -13,3 +13,8 @@ def distillation_loss(student_logits, teacher_logits, labels, temperature, alpha
     )
 
     return alpha * ce_loss + (1 - alpha) * kd_loss * (temperature ** 2)
+
+
+def feature_distillation_loss(student_feat, teacher_feat):
+    #posso anche utilizzare L1 o cosine ma MSE è standard
+    return F.mse_loss(student_feat, teacher_feat)

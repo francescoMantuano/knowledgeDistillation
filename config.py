@@ -8,14 +8,14 @@ BATCH_SIZE = 64
 NUM_EPOCHS = 200
 LR = 3e-4 #1e-4 prima
 
-WEIGHT_DECAY = 1e-4 #dropout per regolarizzare
+WEIGHT_DECAY = 1e-4 #per regolarizzare
 
 IMAGE_SIZE = 224
 
-KD_TEMPERATURE = 1 #eventualmente modificabile
-KD_ALPHA = 0.7 #eventualmente modificabile
+KD_TEMPERATURE = 3 #eventualmente modificabile
+KD_ALPHA = 0.4 #eventualmente modificabile
 
 PATIENCE = 15 #early stopping per regolarizzare
 
-DROPOUT_RATE = 0.3
+DROPOUT_RATE = 0.3 # per bloccare alcune funzioni di attivazione
     

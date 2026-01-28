@@ -13,9 +13,8 @@ WEIGHT_DECAY = 1e-4 #per regolarizzare
 IMAGE_SIZE = 224
 
 KD_TEMPERATURE = 4 #eventualmente modificabile
-KD_ALPHA = 0.2 #eventualmente modificabile
+KD_ALPHA = 0.3 #eventualmente modificabile
 
 PATIENCE = 15 #early stopping per regolarizzare
 
-DROPOUT_RATE = 0.3 # per bloccare alcune funzioni di attivazione
     

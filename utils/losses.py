@@ -1,6 +1,6 @@
 import torch.nn.functional as F
 
-def distillation_loss(student_logits, teacher_logits, labels, temperature, alpha):
+def distillation_loss(student_logits, teacher_logits, labels, temperature, alpha, gamma):
     #alpha e temperature da modificare per vedere come diversi parametri condizionano i risultati
 
     ce_loss = F.cross_entropy(student_logits, labels)
@@ -12,7 +12,7 @@ def distillation_loss(student_logits, teacher_logits, labels, temperature, alpha
         reduction="batchmean" #aggregazione standard per KD, indica come aggregare la loss, facendo la media per ogni batch
     )
 
-    return alpha * ce_loss + (1 - alpha) * kd_loss * (temperature ** 2)
+    return gamma * ce_loss + alpha * kd_loss * (temperature ** 2)
 
 
 def feature_distillation_loss(student_feat, teacher_feat):

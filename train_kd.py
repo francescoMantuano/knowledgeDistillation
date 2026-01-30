@@ -11,6 +11,8 @@ if __name__ == "__main__":
     import time
     import os
     from utils.hooks import FeatureHook
+    from utils.projection import FeatureProjector
+    from utils.model_utils import get_feature_channels, get_kd_feature_layer
 
     best_val_loss = float("inf")
     patience_counter = 0
@@ -23,13 +25,23 @@ if __name__ == "__main__":
     teacher.eval()
 
     student = get_student(NUM_CLASSES).to(DEVICE)
+
+    #estraggo il layer apposito a cui agganciarmi con l'hook in base al modello
+    teacher_layer = get_kd_feature_layer(teacher)
+    student_layer = get_kd_feature_layer(student)
+
+    #hooks da agganciare a teacher e student
+    teacher_hook = FeatureHook(teacher_layer)
+    student_hook = FeatureHook(student_layer)
+
+    #estrazione canali da student e teacher
+    teacher_channels = get_feature_channels(teacher, teacher_hook, DEVICE)
+    student_channels = get_feature_channels(student, student_hook, DEVICE)
+
+    projector = FeatureProjector(in_channels=student_channels, out_channels=teacher_channels).to(DEVICE)
     
-    #ultimo layer convoluzionale di ResNet152
-    teacher_hook = FeatureHook(teacher.layer4)
-    #da modificare in base al modello dello student
-    student_hook = FeatureHook(student.layer4)
-    
-    optimizer = AdamW(student.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
+    #l'ottimizzatore va aggiornato anche tenendo conto del projector
+    optimizer = AdamW(list(student.parameters()) + list(projector.parameters()), lr=LR, weight_decay=WEIGHT_DECAY)
 
     start_time = time.time()
 
@@ -42,20 +54,27 @@ if __name__ == "__main__":
         # loop di training
         for x, y in train_loader:
             x, y = x.to(DEVICE), y.to(DEVICE)
+            
+            teacher_hook.clear()
+            student_hook.clear()
+
+            optimizer.zero_grad()
 
             with torch.no_grad():
                 teacher_logits = teacher(x)
+                teacher_feat = teacher_hook.features
+            teacher_feat = teacher_hook.features.detach() #per extra sicurezza, il detach è già implicito se uso with torch.no_grad(): teacher(x)
 
             student_logits = student(x)
-
             student_feat = student_hook.features
-            teacher_feat = teacher_hook.features
+
+            #proiezione a causa delle diverse dimensioni di teacher e student
+            student_feat_proj = projector(student_feat)
 
             loss_logits = distillation_loss(student_logits, teacher_logits, y, KD_TEMPERATURE, KD_ALPHA, KD_GAMMA)
             loss_feat = feature_distillation_loss(student_feat_proj, teacher_feat)
             loss = loss_logits + KD_BETA * loss_feat
-
-            optimizer.zero_grad()
+            
             loss.backward()
             optimizer.step()
 
@@ -74,10 +93,16 @@ if __name__ == "__main__":
             for x_val, y_val in val_loader:
                 x_val, y_val = x_val.to(DEVICE), y_val.to(DEVICE)
 
-                student_logits = student(x_val)
                 teacher_logits = teacher(x_val)
+                teacher_feat = teacher_hook.features
+                student_logits = student(x_val)
+                student_feat = student_hook.features
+                student_feat_proj = projector(student_feat)
 
-                loss = distillation_loss(student_logits, teacher_logits, y_val, KD_TEMPERATURE, KD_ALPHA)
+                loss_logits = distillation_loss(student_logits, teacher_logits, y, KD_TEMPERATURE, KD_ALPHA, KD_GAMMA)
+                loss_feat = feature_distillation_loss(student_feat_proj, teacher_feat)
+                loss = loss_logits + KD_BETA * loss_feat
+            
 
                 val_loss += loss.item()
                 val_acc += accuracy(student_logits, y_val)
@@ -85,7 +110,7 @@ if __name__ == "__main__":
         val_loss /= len(val_loader)
         val_acc /= len(val_loader)
 
-        print(f"[Student KD] Epoch {epoch}: Train Acc {epoch_acc:.3f} | Val Acc {val_acc:.3f} | Train Loss {epoch_loss:.3f} | Val Loss {val_loss:.3f}")
+        print(f"[Student KD] Epoch {epoch}: Train Acc {epoch_acc:.3f} | Val Acc {val_acc:.3f} | Train Loss {epoch_loss:.3f} | Val Loss {val_loss:.3f} | Logits Loss {loss_logits:.3f} | Feat Loss {loss_feat:.3f}")
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss

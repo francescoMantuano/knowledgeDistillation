@@ -7,5 +7,9 @@ class FeatureHook:
     def hook_fn(self, module, input, output):
         self.features = output
 
+    #per resettare le feature a ogni batch, altrimenti in caso di bug riutilizzerei features vecchie
+    def clear(self):
+        self.features = None
+
     def close(self):
         self.hook.remove()

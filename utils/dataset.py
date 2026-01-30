@@ -26,9 +26,9 @@ def get_dataloaders(data_root, batch_size):
     val_set = datasets.ImageFolder(f"{data_root}/val", test_transform)
     test_set = datasets.ImageFolder(f"{data_root}/test", test_transform)
 
-    #da verificare se posso utilizzare 4 workers
-    train_loader = DataLoader(train_set, batch_size, shuffle=True, num_workers=4)
-    val_loader = DataLoader(val_set, batch_size, shuffle=False, num_workers=4)
-    test_loader = DataLoader(test_set, batch_size, shuffle=False, num_workers=4)
+    #pin_memory su GPU riduce il tempo di trasferimento da CPU a GPU
+    train_loader = DataLoader(train_set, batch_size, shuffle=True, num_workers=8, pin_memory=True)
+    val_loader = DataLoader(val_set, batch_size, shuffle=False, num_workers=8, pin_memory=True)
+    test_loader = DataLoader(test_set, batch_size, shuffle=False, num_workers=8, pin_memory=True)
 
     return train_loader, val_loader, test_loader

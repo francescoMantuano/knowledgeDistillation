@@ -1,7 +1,7 @@
 import torch.nn.functional as F
 
 def distillation_loss(student_logits, teacher_logits, labels, temperature, alpha, gamma):
-    #alpha e temperature da modificare per vedere come diversi parametri condizionano i risultati
+    #alpha, gamma e temperature da modificare per vedere come diversi parametri condizionano i risultati
 
     ce_loss = F.cross_entropy(student_logits, labels)
     
@@ -16,5 +16,14 @@ def distillation_loss(student_logits, teacher_logits, labels, temperature, alpha
 
 
 def feature_distillation_loss(student_feat, teacher_feat):
+    #normalizzo siccome teacher e student hanno architetture, profondità e scale di attivazione diverse, altrimenti la scala distorgerebbe la loss
+    student_feat = F.normalize(student_feat, dim=1)
+    teacher_feat = F.normalize(teacher_feat, dim=1)
+
     #posso anche utilizzare L1 o cosine ma MSE è standard
-    return F.mse_loss(student_feat, teacher_feat)
+    loss = F.mse_loss(student_feat, teacher_feat)
+    return loss
+
+#potrei anche utilizzare cosine similarity: 
+#loss = 1 - (student_feat * teacher_feat).sum(dim=1).mean()
+#return loss

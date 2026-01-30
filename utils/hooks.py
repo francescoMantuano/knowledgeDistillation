@@ -11,5 +11,6 @@ class FeatureHook:
     def clear(self):
         self.features = None
 
+    #per chiudere l'hook
     def close(self):
         self.hook.remove()

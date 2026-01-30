@@ -20,7 +20,7 @@ def get_feature_channels(model, layer, device, input_size=(1,3,IMAGE_SIZE,IMAGE_
     return channels
 
 def get_kd_feature_layer(model):
-    name = model.__class__-__name__.lower()
+    name = model.__class__.__name__.lower()
 
     if "resnet" in name:
         return model.layer4

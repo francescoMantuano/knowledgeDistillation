@@ -4,12 +4,13 @@ if __name__ == "__main__":
     from models.teacher import get_teacher
     from models.student import get_student
     from utils.dataset import get_dataloaders
-    from utils.losses import distillation_loss
+    from utils.losses import distillation_loss, feature_distillation_loss
     from utils.metrics import accuracy
     from utils.train_utils import count_params
     from config import *
     import time
     import os
+    from utils.hooks import FeatureHook
 
     best_val_loss = float("inf")
     patience_counter = 0
@@ -22,6 +23,12 @@ if __name__ == "__main__":
     teacher.eval()
 
     student = get_student(NUM_CLASSES).to(DEVICE)
+    
+    #ultimo layer convoluzionale di ResNet152
+    teacher_hook = FeatureHook(teacher.layer4)
+    #da modificare in base al modello dello student
+    student_hook = FeatureHook(student.layer4)
+    
     optimizer = AdamW(student.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
 
     start_time = time.time()
@@ -41,7 +48,12 @@ if __name__ == "__main__":
 
             student_logits = student(x)
 
-            loss = distillation_loss(student_logits, teacher_logits, y, KD_TEMPERATURE, KD_ALPHA)
+            student_feat = student_hook.features
+            teacher_feat = teacher_hook.features
+
+            loss_logits = distillation_loss(student_logits, teacher_logits, y, KD_TEMPERATURE, KD_ALPHA, KD_GAMMA)
+            loss_feat = feature_distillation_loss(student_feat_proj, teacher_feat)
+            loss = loss_logits + KD_BETA * loss_feat
 
             optimizer.zero_grad()
             loss.backward()

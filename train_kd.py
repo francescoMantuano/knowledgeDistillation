@@ -110,7 +110,7 @@ if __name__ == "__main__":
         val_loss /= len(val_loader)
         val_acc /= len(val_loader)
 
-        print(f"[Student KD] Epoch {epoch}: Train Acc {epoch_acc:.3f} | Val Acc {val_acc:.3f} | Train Loss {epoch_loss:.3f} | Val Loss {val_loss:.3f} | Logits Loss {loss_logits:.3f} | Feat Loss {loss_feat:.3f}")
+        print(f"[Student KD] Epoch {epoch}: Train Acc {epoch_acc:.3f} | Val Acc {val_acc:.3f} | Train Loss {epoch_loss:.3f} | Val Loss {val_loss:.3f} | Logits Loss {loss_logits:.3f} | Feat Loss {loss_feat:.6f}")
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss

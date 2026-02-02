@@ -16,14 +16,20 @@ def distillation_loss(student_logits, teacher_logits, labels, temperature, alpha
 
 
 def feature_distillation_loss(student_feat, teacher_feat):
-    #normalizzo siccome teacher e student hanno architetture, profondità e scale di attivazione diverse, altrimenti la scala distorgerebbe la loss
-    student_feat = F.normalize(student_feat, dim=1)
-    teacher_feat = F.normalize(teacher_feat, dim=1)
+    """
+    Feature distillation loss based on cosine similarity.
+    Assumes features are [B, C, H, W].
+    """
 
-    #posso anche utilizzare L1 o cosine ma MSE è standard
-    loss = F.mse_loss(student_feat, teacher_feat)
-    return loss
+    # 1) Global Average Pooling
+    student_vec = F.adaptive_avg_pool2d(student_feat, 1).squeeze(-1).squeeze(-1)
+    teacher_vec = F.adaptive_avg_pool2d(teacher_feat, 1).squeeze(-1).squeeze(-1)
 
-#potrei anche utilizzare cosine similarity: 
-#loss = 1 - (student_feat * teacher_feat).sum(dim=1).mean()
-#return loss
+    # 2) L2 normalization
+    student_vec = F.normalize(student_vec, dim=1)
+    teacher_vec = F.normalize(teacher_vec, dim=1)
+
+    # 3) Cosine loss
+    loss = 1 - F.cosine_similarity(student_vec, teacher_vec, dim=1)
+
+    return loss.mean()

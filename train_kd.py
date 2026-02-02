@@ -99,7 +99,7 @@ if __name__ == "__main__":
                 student_feat = student_hook.features
                 student_feat_proj = projector(student_feat)
 
-                loss_logits = distillation_loss(student_logits, teacher_logits, y, KD_TEMPERATURE, KD_ALPHA, KD_GAMMA)
+                loss_logits = distillation_loss(student_logits, teacher_logits, y_val, KD_TEMPERATURE, KD_ALPHA, KD_GAMMA)
                 loss_feat = feature_distillation_loss(student_feat_proj, teacher_feat)
                 loss = loss_logits + KD_BETA * loss_feat
             

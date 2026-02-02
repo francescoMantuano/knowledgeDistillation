@@ -14,9 +14,11 @@ IMAGE_SIZE = 224
 
 KD_TEMPERATURE = 4 #eventualmente modificabile
 
-KD_ALPHA = 0.5 #eventualmente modificabile
-KD_BETA = 0.05  #eventualmente modificabile
-KD_GAMMA = 0.5  #eventualmente modificabile
+KD_ALPHA = 0.7 #eventualmente modificabile
+KD_BETA = 0.2  #eventualmente modificabile
+KD_GAMMA = 0.05  #eventualmente modificabile
+
+DROPOUT_RATE = 0.3
 
 PATIENCE = 15 #early stopping per regolarizzare
 

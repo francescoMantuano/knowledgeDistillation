@@ -35,8 +35,8 @@ if __name__ == "__main__":
     student_hook = FeatureHook(student_layer)
 
     #estrazione canali da student e teacher
-    teacher_channels = get_feature_channels(teacher, teacher_hook, DEVICE)
-    student_channels = get_feature_channels(student, student_hook, DEVICE)
+    teacher_channels = get_feature_channels(teacher, teacher_layer, DEVICE)
+    student_channels = get_feature_channels(student, student_layer, DEVICE)
 
     projector = FeatureProjector(in_channels=student_channels, out_channels=teacher_channels).to(DEVICE)
     

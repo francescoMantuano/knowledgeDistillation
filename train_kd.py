@@ -4,7 +4,7 @@ if __name__ == "__main__":
     from models.teacher import get_teacher
     from models.student import get_student
     from utils.dataset import get_dataloaders
-    from utils.losses import distillation_loss, feature_distillation_loss
+    from utils.losses import *
     from utils.metrics import accuracy
     from utils.train_utils import count_params
     from config import *
@@ -73,7 +73,8 @@ if __name__ == "__main__":
 
             loss_logits = distillation_loss(student_logits, teacher_logits, y, KD_TEMPERATURE, KD_ALPHA, KD_GAMMA)
             loss_feat = feature_distillation_loss(student_feat_proj, teacher_feat)
-            loss = loss_logits + KD_BETA * loss_feat
+            loss_rel = relationship_distillation_loss(student_feat_proj, teacher_feat)
+            loss = loss_logits + KD_BETA * loss_feat + KD_DELTA * loss_rel
             
             loss.backward()
             optimizer.step()
@@ -101,7 +102,8 @@ if __name__ == "__main__":
 
                 loss_logits = distillation_loss(student_logits, teacher_logits, y_val, KD_TEMPERATURE, KD_ALPHA, KD_GAMMA)
                 loss_feat = feature_distillation_loss(student_feat_proj, teacher_feat)
-                loss = loss_logits + KD_BETA * loss_feat
+                loss_rel = relationship_distillation_loss(student_feat_proj, teacher_feat)
+                loss = loss_logits + KD_BETA * loss_feat + KD_DELTA * loss_rel
             
 
                 val_loss += loss.item()
@@ -110,7 +112,7 @@ if __name__ == "__main__":
         val_loss /= len(val_loader)
         val_acc /= len(val_loader)
 
-        print(f"[Student KD] Epoch {epoch}: Train Acc {epoch_acc:.3f} | Val Acc {val_acc:.3f} | Train Loss {epoch_loss:.3f} | Val Loss {val_loss:.3f} | Logits Loss {loss_logits:.3f} | Feat Loss {loss_feat:.6f}")
+        print(f"[Student KD] Epoch {epoch}: Train Acc {epoch_acc:.3f} | Val Acc {val_acc:.3f} | Train Loss {epoch_loss:.3f} | Val Loss {val_loss:.3f} | Logits Loss {loss_logits:.3f} | Feat Loss {loss_feat:.6f} | Relationship Loss {loss_rel:.6f}")
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss

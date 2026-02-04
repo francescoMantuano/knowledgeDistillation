@@ -15,7 +15,7 @@ def distillation_loss(student_logits, teacher_logits, labels, temperature, alpha
     return gamma * ce_loss + alpha * kd_loss * (temperature ** 2)
 
 
-def feature_distillation_loss(student_feat, teacher_feat):
+def feature_distillation_loss(student_feat, teacher_feat, normalize=True):
     """
     Feature distillation loss based on cosine similarity.
     Assumes features are [B, C, H, W].
@@ -26,10 +26,25 @@ def feature_distillation_loss(student_feat, teacher_feat):
     teacher_vec = F.adaptive_avg_pool2d(teacher_feat, 1).squeeze(-1).squeeze(-1)
 
     # 2) L2 normalization
-    student_vec = F.normalize(student_vec, dim=1)
-    teacher_vec = F.normalize(teacher_vec, dim=1)
+    if normalize:
+        student_vec = F.normalize(student_vec, dim=1)
+        teacher_vec = F.normalize(teacher_vec, dim=1)
 
     # 3) Cosine loss
     loss = 1 - F.cosine_similarity(student_vec, teacher_vec, dim=1)
 
     return loss.mean()
+
+def relationship_distillation_loss(student_feat, teacher_feat, normalize=True):
+    #come loss uso CCKD, eventualmente posso anche utilizzare RKD
+    s = student_feat.flatten(1)
+    t = teacher_feat.flatten(1)
+
+    if normalize:
+        s = F.normalize(s, dim=1)
+        t = F.normalize(t, dim=1)
+
+    C_s = s @ s.T
+    C_t = t @ t.T
+
+    return F.mse_loss(C_s, C_t)

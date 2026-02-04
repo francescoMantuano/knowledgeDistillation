@@ -14,12 +14,14 @@ IMAGE_SIZE = 224
 
 KD_TEMPERATURE = 4 #eventualmente modificabile
 
-KD_ALPHA = 0.7 #kd loss
-KD_BETA = 0.2  #feature loss
-KD_GAMMA = 2  #ce loss
-KD_DELTA = 0.1 #relationship loss
+KD_ALPHA = 0.3 #kd loss
+KD_BETA = 0.15  #feature loss
+KD_GAMMA = 0.5 #ce loss
+KD_DELTA = 0.05 #relationship loss
 
 DROPOUT_RATE = 0.3
+
+REL_WARMUP = 10 #warmup per la relationship loss siccome rumorosa all'inizio del training
 
 PATIENCE = 15 #early stopping per regolarizzare
 

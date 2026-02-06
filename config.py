@@ -21,8 +21,8 @@ KD_DELTA = 0.05 #relationship loss
 
 DROPOUT_RATE = 0.3
 
-REL_WARMUP = 10 #warmup per la relationship loss siccome rumorosa all'inizio del training
-
+REL_WARMUP = 50 #warmup per la relationship loss siccome rumorosa all'inizio del training
+POWER = 3 #potenza dell progressione geometrica
 PATIENCE = 15 #early stopping per regolarizzare
 
     

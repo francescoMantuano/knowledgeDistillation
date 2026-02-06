@@ -36,7 +36,7 @@ def feature_distillation_loss(student_feat, teacher_feat, normalize=True):
     return loss.mean()
 
 def relationship_distillation_loss(student_feat, teacher_feat, normalize=True):
-    #come loss uso CCKD, eventualmente posso anche utilizzare RKD
+    #come loss uso CCKD, eventualmente posso anche utilizzare RKD al suo posto
     s = student_feat.flatten(1)
     t = teacher_feat.flatten(1)
 
@@ -44,6 +44,7 @@ def relationship_distillation_loss(student_feat, teacher_feat, normalize=True):
         s = F.normalize(s, dim=1)
         t = F.normalize(t, dim=1)
 
+    #calcola la matrice di correlazione tra i capioni del batch
     C_s = s @ s.T
     C_t = t @ t.T
 

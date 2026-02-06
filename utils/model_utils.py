@@ -33,3 +33,8 @@ def get_kd_feature_layer(model):
     
     else:
         raise ValueError(f"Unsupported model for KD: {name}")
+    
+def geometric_warmup(epoch, max_value, warmup_epochs, power):
+    if epoch >= warmup_epochs:
+        return max_value
+    return max_value * (epoch / warmup_epochs) ** power

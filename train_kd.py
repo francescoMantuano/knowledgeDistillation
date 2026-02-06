@@ -12,7 +12,7 @@ if __name__ == "__main__":
     import os
     from utils.hooks import FeatureHook
     from utils.projection import FeatureProjector
-    from utils.model_utils import get_feature_channels, get_kd_feature_layer
+    from utils.model_utils import *
 
     best_val_loss = float("inf")
     patience_counter = 0
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         student.train()
         epoch_loss = 0.0
         epoch_acc = 0.0
-
+        delta = geometric_warmup(actual_epochs,KD_DELTA,REL_WARMUP,POWER)
         # loop di training
         for x, y in train_loader:
             x, y = x.to(DEVICE), y.to(DEVICE)
@@ -74,7 +74,7 @@ if __name__ == "__main__":
             loss_logits = distillation_loss(student_logits, teacher_logits, y, KD_TEMPERATURE, KD_ALPHA, KD_GAMMA)
             loss_feat = feature_distillation_loss(student_feat_proj, teacher_feat)
             loss_rel = relationship_distillation_loss(student_feat_proj, teacher_feat)
-            loss = loss_logits + KD_BETA * loss_feat + KD_DELTA * loss_rel
+            loss = loss_logits + KD_BETA * loss_feat + delta * loss_rel
             
             loss.backward()
             optimizer.step()
@@ -103,7 +103,7 @@ if __name__ == "__main__":
                 loss_logits = distillation_loss(student_logits, teacher_logits, y_val, KD_TEMPERATURE, KD_ALPHA, KD_GAMMA)
                 loss_feat = feature_distillation_loss(student_feat_proj, teacher_feat)
                 loss_rel = relationship_distillation_loss(student_feat_proj, teacher_feat)
-                loss = loss_logits + KD_BETA * loss_feat + KD_DELTA * loss_rel
+                loss = loss_logits + KD_BETA * loss_feat + delta * loss_rel
             
 
                 val_loss += loss.item()

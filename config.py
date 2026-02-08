@@ -15,9 +15,9 @@ IMAGE_SIZE = 224
 KD_TEMPERATURE = 4 #eventualmente modificabile
 
 KD_ALPHA = 0.3 #kd loss
-KD_BETA = 0.15  #feature loss
+KD_BETA = 0.05  #feature loss
 KD_GAMMA = 0.5 #ce loss
-KD_DELTA = 0.05 #relationship loss
+KD_DELTA = 0.02 #relationship loss
 
 DROPOUT_RATE = 0.3
 

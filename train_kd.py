@@ -50,7 +50,7 @@ if __name__ == "__main__":
         student.train()
         epoch_loss = 0.0
         epoch_acc = 0.0
-        delta = geometric_warmup(actual_epochs,KD_DELTA,REL_WARMUP,POWER)
+        delta = linear_warmup(actual_epochs,REL_WARMUP,KD_DELTA)
         # loop di training
         for x, y in train_loader:
             x, y = x.to(DEVICE), y.to(DEVICE)

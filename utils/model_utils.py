@@ -38,3 +38,12 @@ def geometric_warmup(epoch, max_value, warmup_epochs, power):
     if epoch >= warmup_epochs:
         return max_value
     return max_value * (epoch / warmup_epochs) ** power
+
+def linear_warmup(epoch, warmup_epochs, target_value):
+    if warmup_epochs == 0:
+        return target_value
+
+    if epoch >= warmup_epochs:
+        return target_value
+
+    return target_value * (epoch / warmup_epochs)
